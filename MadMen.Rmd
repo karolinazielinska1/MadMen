@@ -1,0 +1,12 @@
+---
+title: "Mad Men"
+author: "Karolina Zielinska"
+date: "2025-05-25"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The purpose of this file is to give a brief overview of the Show 'Mad Men'.
