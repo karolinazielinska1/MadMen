@@ -1,12 +1,68 @@
 ---
 title: "Mad Men"
-author: "Karolina Zielinska"
+author: "Karolina Zielińska"
 date: "2025-05-25"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(rvest)
+library(dplyr)
+library(ggplot2)
 ```
 
-The purpose of this file is to give a brief overview of the Show 'Mad Men'.
+The purpose of this file is to give a brief overview of the Show ***'Mad Men'***.
+
+![](picture.jpeg)
+
+## Description
+
+The series covers the advertising industry centered on Madison Avenue in New York City in the 1960s, primarily following the professional and personal life of protagonist, Don Draper, a creative director and partner at a Manhattan firm. The plotlines also follow the personal and professional lives of Draper's family and co-workers as they relate to him and each other. Overshadowing the series is Draper's double life both as to his true identity, and his unfaithfulness to his family, while he tries to maintain a brilliant and charismatic outward appearance.
+
+## Ratings 
+
+Below you can see a table presenting ratings of each season.
+
+```{r, echo=FALSE, warning=FALSE}
+
+madmen<-read_html("https://en.wikipedia.org/wiki/Mad_Men")
+table<-html_table(madmen, fill=TRUE)
+rating<-table[[3]]
+show(rating)
+```
+
+## Viewership
+
+```{r, echo=FALSE}
+
+views<-table[[4]]
+
+views<-views[, !duplicated(names(views))]
+views<-views[-1, ]
+
+views$`Average viewers(in millions)`<-sub("^([0-9.]+).*", "\\1", views$`Average viewers(in millions)`)
+
+views$`Average viewers(in millions)`<-as.numeric(views$`Average viewers(in millions)`)
+
+views$Premiered<-as.Date(views$Premiered, format= "%B %d, %Y")
+
+ggplot(views, aes(x=Premiered, y=`Average viewers(in millions)`)) +
+  geom_line(color = "pink", size=3) +
+  xlab("Premiered") +
+  ylab("Average viewers (in millions)") +
+  ggtitle("Average Viewers of Mad Men Over Time") +
+  theme_minimal()
+```
+
+```{r, echo=FALSE}
+ggplot(views, aes(x = Season, y=`Average viewers(in millions)`))+ 
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7, fill = "plum")+
+    theme_void()+
+  geom_text(aes(label =`Average viewers(in millions)`), position = position_dodge(width = 0.8), vjust = -0.3, size = 3.5, color = 'black')+
+
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5, angle=45), axis.line.x = element_line(color='black'),
+    axis.text.x = element_text(color='black', size=11, angle = 25, hjust = 0.55))+
+  labs(title='Bar Plot of Viewership in each Season (in millions)')
+
+```
