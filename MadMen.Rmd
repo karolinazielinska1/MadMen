@@ -35,19 +35,23 @@ show(rating)
 ## Viewership
 
 ```{r, echo=FALSE}
-
 views<-table[[4]]
-
+names(views) <- make.names(names(views))
 views<-views[, !duplicated(names(views))]
 views<-views[-1, ]
 
-views$`Average viewers(in millions)`<-sub("^([0-9.]+).*", "\\1", views$`Average viewers(in millions)`)
+views$Average.viewers.in.millions.<-sub("^([0-9.]+).*", "\\1", views$Average.viewers.in.millions.)
 
-views$`Average viewers(in millions)`<-as.numeric(views$`Average viewers(in millions)`)
+views$Average.viewers.in.millions.<-as.numeric(views$Average.viewers.in.millions.)
 
 views$Premiered<-as.Date(views$Premiered, format= "%B %d, %Y")
+```
 
-ggplot(views, aes(x=Premiered, y=`Average viewers(in millions)`)) +
+**Viewership of *Mad Men*** evolved over its seven-season run. The show debuted with viewership of 0.9 million in Season 1 in 2008. Peak viewership occurred in Seasons 5 and 6, with averages nearing or exceeding 2.5 million viewers. The average viewership across all seasons was `r mean(views$Average.viewers.in.millions.)` million.
+
+```{r, echo=FALSE, warning=FALSE}
+
+ggplot(views, aes(x=Premiered, y=Average.viewers.in.millions.)) +
   geom_line(color = "pink", size=3) +
   xlab("Premiered") +
   ylab("Average viewers (in millions)") +
@@ -55,11 +59,11 @@ ggplot(views, aes(x=Premiered, y=`Average viewers(in millions)`)) +
   theme_minimal()
 ```
 
-```{r, echo=FALSE}
-ggplot(views, aes(x = Season, y=`Average viewers(in millions)`))+ 
+```{r, echo=FALSE, warning=FALSE}
+ggplot(views, aes(x = Season, y=Average.viewers.in.millions.))+ 
   geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7, fill = "plum")+
     theme_void()+
-  geom_text(aes(label =`Average viewers(in millions)`), position = position_dodge(width = 0.8), vjust = -0.3, size = 3.5, color = 'black')+
+  geom_text(aes(label =Average.viewers.in.millions.), position = position_dodge(width = 0.8), vjust = -0.3, size = 3.5, color = 'black')+
 
   theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5, angle=45), axis.line.x = element_line(color='black'),
     axis.text.x = element_text(color='black', size=11, angle = 25, hjust = 0.55))+
